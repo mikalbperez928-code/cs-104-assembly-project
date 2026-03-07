@@ -65,8 +65,8 @@ main:				# Start of the main function
 	# live in the rax register.
 
 	# Now, we should save the number the open function gave back to us
-	# Let's save it to the rbx register (for reasons outside this
-	# class, it needs to be the rbx register; come talk to me
+	# Let's save it to the rbx register (for reasons outside the scope
+	# of this class, it needs to be the rbx register; come talk to me
 	# during office hours if you are curious why).
 
 	# The last sub-problem to solve in the main function is to give
@@ -87,8 +87,9 @@ loop:				# Start of the loop function
 
 	# Next, we put the value of rsp into the second argument. 
 
-	# Finally, we put 1 into rdx. The rdx register is always the
-	# third argument for a function.
+	# Finally, we put the number of characters we want to read into
+	# rdx. How many characters did we say we wanted to read?
+	# The rdx register is always the third argument for a function.
 
 	mov	rax, 0		# Put 0 (read) into function number
 	syscall			# Call read with 3 arguments
@@ -103,8 +104,9 @@ loop:				# Start of the loop function
 	# After we read in a letter, we need to put that letter on
 	# the screen.
 	# To do that: put 1 in the first argument, put the value of
-	# rsp in the second argument, and put 1 in the third argument
-	# A 1 in the first argument is shorthand for the screen
+	# rsp in the second argument, and put the number of characters
+	# we want to write in the third argument.
+	# A 1 in the first argument is shorthand for the screen.
 
 	mov	rax, 1		# Put 1 (write) into function number
 	syscall			# Call write with 3 arguments
@@ -126,6 +128,9 @@ done:				# Start of the done function
 	mov	rax, 60		# Put 60 (exit) into function number
 	syscall			# Call exit with an argument of 0
 error:				# Start of the error function
-	mov	rdi, 1		# Put 1 into first argument
+	# If a program exits with a number other than 0, that usually
+	# means there was an error. You don't need to be fancy here:
+	# exiting with 1 is perfectly good.
+
 	mov	rax, 60		# Put 60 (exit) into function number
 	syscall			# Call exit with an argument of 1
