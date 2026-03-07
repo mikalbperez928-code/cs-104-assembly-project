@@ -70,12 +70,13 @@ _main:				// Start of main function
 	// live in the x0 register.
 
 	// Now, we should save the number the open function gave back to us
-	// Let's say it to the x20 register (for reason outside this class,
-	// it needs to be the x20 register; come talk to me during office
-	// hours if you are curious why).
+	// Let's save it to the x20 register (for reasons outside the scope
+	// of this class, it needs to be the x20 register; come talk to me
+	// during office hours if you are curious why).
 
 	// The last sub-problem to solve in the main function is to give
-	// ourselves some space to store the letters we read from the file.
+	// ourselves some space to store the characters we read from the
+	// file.
 	// We will use sp for this. Remember that when our program starts,
 	// sp can't hold anything. In order to store values into sp, we
 	// need to *subtract* sp by the amount of data we want to store.
@@ -83,8 +84,9 @@ _main:				// Start of main function
 	// and not add is beyond the scope of this class).
 	// How many bytes do we need to store one ASCII character? Give
 	// yourself at least that many bytes of storage space. If the
-	// number of bytes we need isn't divisible by 8, round up to the
-	// next multiple of 8.
+	// number of bytes we need isn't divisible by 16, round up to the
+	// next multiple of 16 (the reason why is also outside the scope
+	// of this class).
 
 loop:				// Start of the loop function
 	// The loop function is where all the real work happens.
@@ -94,16 +96,19 @@ loop:				// Start of the loop function
 
 	// Next, we put the value of sp into the second argument
 
-	// Finally, we put 1 into x2. The x2 register is always the third
-	// argument for a function.
+	// Finally, we put the number of characters we want to read
+	// into x2. How many did we say we want to read each time we
+	// iterated through the loop?
+	// The x2 register is always the third argument for a function.
 
 	mov	x16, #3		// Put the number 3 into register x16 (read)
 	svc	#0x80		// Call the read function with 3 arguments
 
-	// After we read in a letter, we need to put that letter on the
-	// screen.
+	// After we read in a character, we need to put that letter on
+	// the screen.
 	// To do that: put 1 in the first argument, put the value of sp
-	// in the second argument, and put 1 in the third argument
+	// in the second argument, and put the number of characters we
+	// want to write in the third argument.
 	// A 1 in the first argument is shorthand for the screen
 
 	mov	x16, #4		// Put the number 4 into register x16 (write)
@@ -118,9 +123,16 @@ loop:				// Start of the loop function
 	// should jump back to the top of the loop function so we can do
 	// it all again with the next letter.
 
-error:				// Start of the error function
-	// You don't need to do anything with the error and done functions.
-	mov	x0, #1		// Put the number 1 into register x0
 done:				// Start of the done function
-	mov	x16, #1		// Put the number 1 into register x16 (exit)
-	svc	#0x80		// Call the exit function with 1 argument
+	// Here, put a 0 into the first argument
+	// If a program exits with 0, that means it was successful
+
+	mov x16, #1		// Put the number 1 into register x16 (exit)
+	svc #0x80		// Call the exit function with 1 argument
+error:				// Start of the error function
+	// If a program exits with a number other than 0, that usually
+	// means there was an error. You don't need to be fancy here:
+	// exiting with 1 is perfectly good.
+
+	mov x16. #1		// Put the number 1 into register x16 (exit)
+	svc #0x80		// Call the exit function with 1 argument
