@@ -51,7 +51,8 @@ _main:				// Start of main function
 	// Let's start by checking to see if we have 2 arguments
 	// The number of arguments we have lives in register x0
 	// If we don't have exactly 2 arguments, go to the error function
-
+cmp x0, #2
+bne error
 	ldr	x0, [x1, #8]	// Puts the file name into register x0.
 
 	// The line above puts the file name into the first argument
@@ -62,7 +63,8 @@ _main:				// Start of main function
 
 	mov	x16, #5		// Put the number 5 into register x16 (open)
 	svc	#0x80		// Call the open function with 2 arguments
-
+cmp x0, #0
+blt error
 	// Here, we need to check the number that the open function gives
 	// back to us.
 	// If the number is less than 0, we should go to the error function
@@ -73,7 +75,7 @@ _main:				// Start of main function
 	// Let's save it to the x20 register (for reasons outside the scope
 	// of this class, it needs to be the x20 register; come talk to me
 	// during office hours if you are curious why).
-
+mov x20, x0
 	// The last sub-problem to solve in the main function is to give
 	// ourselves some space to store the characters we read from the
 	// file.
@@ -87,13 +89,15 @@ _main:				// Start of main function
 	// number of bytes we need isn't divisible by 16, round up to the
 	// next multiple of 16 (the reason why is also outside the scope
 	// of this class).
-
+sub sp, sp, #16
 loop:				// Start of the loop function
 	// The loop function is where all the real work happens.
 
 	// The first sub-problem is putting the value we saved to x20
 	// into the first argument for read.
-
+mov x0, x20
+mov x1, sp
+mov x2, #1
 	// Next, we put the value of sp into the second argument
 
 	// Finally, we put the number of characters we want to read
