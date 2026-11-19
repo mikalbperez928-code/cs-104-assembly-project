@@ -107,17 +107,23 @@ mov x2, #1
 
 	mov	x16, #3		// Put the number 3 into register x16 (read)
 	svc	#0x80		// Call the read function with 3 arguments
-
+cmp x0, #0
+beq done
+blt error
 	// After we read in a character, we need to put that letter on
 	// the screen.
 	// To do that: put 1 in the first argument, put the value of sp
 	// in the second argument, and put the number of characters we
 	// want to write in the third argument.
 	// A 1 in the first argument is shorthand for the screen
-
+mov x0, #1
+mov x1, sp
+mov x2, #1
 	mov	x16, #4		// Put the number 4 into register x16 (write)
 	svc	#0x80		// Call the write function with 3 arguments
-
+cmp x0, #1
+bne error
+b loop
 	// Now we need to check to see if the number we got back from the
 	// write function is 1. If it is not equal to 1, then we should go
 	// to the error function because it means something bad happened.
@@ -130,13 +136,13 @@ mov x2, #1
 done:				// Start of the done function
 	// Here, put a 0 into the first argument
 	// If a program exits with 0, that means it was successful
-
+mov x0, #0
 	mov x16, #1		// Put the number 1 into register x16 (exit)
 	svc #0x80		// Call the exit function with 1 argument
 error:				// Start of the error function
 	// If a program exits with a number other than 0, that usually
 	// means there was an error. You don't need to be fancy here:
 	// exiting with 1 is perfectly good.
-
-	mov x16. #1		// Put the number 1 into register x16 (exit)
+mov x0, #1
+	mov x16, #1		// Put the number 1 into register x16 (exit)
 	svc #0x80		// Call the exit function with 1 argument
